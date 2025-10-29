@@ -3,16 +3,23 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Before–After 이미지 비교 슬라이더 (단일 파일)</title>
+  <title>자율주행차 시대: AI가 인식하기 쉬운 도로로의 전환 · Before–After 비교 + 포스터 레이아웃 (단일 파일)</title>
   <style>
     :root {
-      --ba-height: 480px;
+      --ba-height: 520px;
       --handle-size: 44px;
       --handle-ring: 6px;
       --accent: #5b8cff;
       --shadow: 0 10px 30px rgba(0,0,0,.25);
-      --radius: 16px;
+      --radius: 18px;
       --track-thickness: 3px;
+      --wrap-max: 980px;
+      --muted: #cfd9ff;
+      --ink: #e8eefc;
+      --ink-dim: #b3c1ff;
+      --bg0: #0b1220;
+      --bg1: #1a2440;
+      --bg2: #0f1730;
     }
 
     * { box-sizing: border-box; }
@@ -21,16 +28,38 @@
       margin: 0;
       font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Noto Sans, Apple SD Gothic Neo, "맑은 고딕", sans-serif;
       color: #111;
-      background: #0b1220;
-      background: radial-gradient(1200px 800px at 70% -10%, #1a2440 0%, #0b1220 60%, #05070e 100%);
-      display: grid; place-items: center; padding: 24px;
+      background: var(--bg0);
+      background: radial-gradient(1200px 800px at 70% -10%, var(--bg1) 0%, var(--bg0) 60%, #05070e 100%);
+      padding: 24px;
     }
 
-    .wrap { width: min(100%, 980px); }
-    .header { color: #e8eefc; margin-bottom: 18px; text-align: center; }
-    .header h1 { font-size: clamp(18px, 2.4vw, 26px); margin: 0 0 6px; letter-spacing: .2px; }
-    .header p { opacity: .8; margin: 0; font-size: 14px; }
+    .wrap { width: min(100%, var(--wrap-max)); margin: 0 auto; }
 
+    /* ------------ Top Intro (Poster-like) ------------ */
+    .intro { color: var(--ink); text-align: center; padding: 32px 8px 8px; }
+    .intro h1 { font-size: clamp(18px, 2.6vw, 28px); margin: 0 0 8px; font-weight: 700; letter-spacing: .1px; }
+    .intro .subtitle { font-size: 13px; opacity: .9; margin: 0 0 32px; color: var(--muted); }
+    .intro .quote { font-size: 14px; color: var(--ink-dim); margin: 6px 0 24px; }
+    .timeline { display:flex; justify-content:center; gap:min(8vw,56px); margin: 10px auto 40px; font-size: 13px; color: var(--muted); opacity: .95; }
+    .timeline span { display:inline-grid; place-items:center; line-height:1.4; }
+    .timeline span b { display:block; color: var(--ink); opacity:.9; margin-bottom:4px; }
+
+    /* Divider line */
+    .hr { height: 1px; background: linear-gradient(90deg, #ffffff10, #ffffff35, #ffffff10); margin: 8px 0 32px; }
+
+    /* ------------ Compare Section Title + Labels ------------ */
+    .compare h2, .conclusion h2, .threeD h2, .footer h2 {
+      color: var(--ink);
+      text-align: center;
+      margin: 64px 0 12px;
+      font-size: clamp(18px, 2.0vw, 22px);
+      letter-spacing: .2px;
+    }
+    .labels { display:flex; justify-content:space-between; color:var(--ink-dim); font-size:14px; margin: 0 0 10px; padding: 0 4px; }
+    .labels span:first-child { padding-left: 4px; }
+    .labels span:last-child { padding-right: 4px; }
+
+    /* ------------ Before/After Slider ------------ */
     .ba { position: relative; width: 100%; height: var(--ba-height); border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow); background: #000; isolation: isolate; user-select: none; }
     .ba__img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center; pointer-events: none; }
     .ba__after { clip-path: inset(0 0 0 calc(var(--pos, 50%) - 1px)); }
@@ -46,24 +75,56 @@
     .ba__label--left { left: 14px; }
     .ba__label--right { right: 14px; }
 
-    .uploader { margin-top: 16px; display: grid; gap: 8px; color: #e8eefc; }
+    .uploader { margin-top: 16px; display: grid; gap: 8px; color: var(--ink); }
     .uploader label { font-size: 12px; opacity: .9; }
-    .uploader input[type="file"] { background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.15); color: #e8eefc; padding: 10px; border-radius: 10px; width: 100%; }
-    .help { color: #cfd9ff; font-size: 12px; opacity: .85; margin-top: 6px; }
+    .uploader input[type="file"] { background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.15); color: var(--ink); padding: 10px; border-radius: 10px; width: 100%; }
     .actions { display: flex; gap: 8px; margin-top: 8px; }
     .btn { background: #5b8cff; color: #081225; border: 0; padding: 10px 14px; border-radius: 10px; font-weight: 600; cursor: pointer; }
     .btn:disabled { opacity: .5; cursor: default; }
-    .drop-hint { position: absolute; inset: 0; display: none; place-items: center; color: #e8eefc; background: rgba(30,46,92,.35); font-weight: 600; letter-spacing: .3px; }
+    .drop-hint { position: absolute; inset: 0; display: none; place-items: center; color: var(--ink); background: rgba(30,46,92,.35); font-weight: 600; letter-spacing: .3px; }
     .ba.dragover .drop-hint { display: grid; }
+
+    /* ------------ Bottom Sections ------------ */
+    .conclusion { text-align:center; color: var(--ink); }
+    .conclusion ol { list-style:none; padding:0; margin: 8px 0 0; }
+    .conclusion li { margin:6px 0; opacity:.95; }
+
+    .threeD { color: var(--ink); }
+    .threeD .robot-grid, .robot-views {
+      display:flex; justify-content:center; gap:20px; flex-wrap:wrap; margin-top:16px;
+    }
+    .threeD img { width: clamp(200px, 32vw, 300px); border-radius: 18px; box-shadow: 0 6px 18px rgba(0,0,0,.35); background: #111; }
+    .robot-views img { width: clamp(160px, 26vw, 240px); }
+
+    .footer { color: var(--ink-dim); text-align:center; margin: 60px 0 8px; font-size: 12px; }
   </style>
 </head>
 <body>
   <div class="wrap">
-    <div class="header">
-      <h1>Before–After 이미지 비교 슬라이더</h1>
-      <p>가운데 핸들을 드래그하거나, 핸들을 선택한 뒤 키보드 ← → 로 비교하세요. 좌/우로 드래그&드롭 또는 붙여넣기(Ctrl/Cmd+V)로 이미지 교체 가능.</p>
-    </div>
 
+    <!-- ======= INTRO (Poster-like top) ======= -->
+    <header class="intro">
+      <h1>자율주행차 시대: AI가 인식하기 쉬운 도로로의 전환</h1>
+      <p class="subtitle">From Human-Readable Road to Machine-Readable Road</p>
+      <p class="quote">“더 이상 인간의 시점만으로 디자인되지 않는다”</p>
+
+      <div class="timeline" aria-label="연도 타임라인">
+        <span><b>20년 전</b>2005</span>
+        <span><b>10년 전</b>2015</span>
+        <span><b>현재</b>2025</span>
+        <span><b>10년 후</b>2035</span>
+        <span><b>20년 후</b>2045</span>
+      </div>
+      <div class="hr" aria-hidden="true"></div>
+    </header>
+
+    <!-- ======= COMPARE TITLE ======= -->
+    <section class="compare" aria-label="입력 방식 비교 섹션">
+      <h2>입력 방식 차이</h2>
+      <div class="labels"><span>인간 시점</span><span>AI 시점</span></div>
+    </section>
+
+    <!-- ======= BEFORE/AFTER SLIDER ======= -->
     <section class="ba" id="ba" aria-label="이미지 비교" data-pos="50">
       <!-- 가시성 확보용 기본 이미지(외부 URL) -->
       <img class="ba__img ba__before" alt="Before 이미지"
@@ -72,11 +133,16 @@
            src="https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?q=80&w=1600&auto=format&fit=crop" />
 
       <div class="ba__divider" aria-hidden="true"></div>
-      <button class="ba__handle" id="baHandle" role="slider" aria-label="이미지 비교 핸들" aria-valuemin="0" aria-valuemax="100" aria-valuenow="50" tabindex="0">
+      <button class="ba__handle" id="baHandle" role="slider" aria-label="이미지 비교 핸들"
+              aria-valuemin="0" aria-valuemax="100" aria-valuenow="50" tabindex="0">
         <div class="ba__handle-core" aria-hidden="true">
           <span class="ba__chevrons" aria-hidden="true">
-            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M15 6L9 12L15 18" stroke="#111" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M9 6L15 12L9 18" stroke="#111" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M15 6L9 12L15 18" stroke="#111" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M9 6L15 12L9 18" stroke="#111" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
           </span>
         </div>
       </button>
@@ -85,6 +151,7 @@
       <div class="drop-hint">이미지를 드롭하세요 · 왼쪽=Before / 오른쪽=After</div>
     </section>
 
+    <!-- ======= UPLOADER ======= -->
     <div class="uploader" aria-label="이미지 교체">
       <label>이미지 선택 (로컬 파일 업로드)</label>
       <input type="file" id="fileBefore" accept="image/*" />
@@ -92,8 +159,39 @@
       <div class="actions">
         <button id="exportBtn" class="btn" disabled>내보내기(HTML 저장)</button>
       </div>
-      <div class="help">드래그&드롭 또는 붙여넣기(Ctrl/Cmd+V)로도 교체할 수 있어요. 업로드한 이미지는 페이지 안에 데이터로 포함되어 <b>오프라인에서도 보이는</b> 단일 HTML로 저장할 수 있습니다.</div>
+      <p style="color:#cfd9ff;font-size:12px;opacity:.85;margin:6px 0 0;">드래그&드롭 또는 붙여넣기(Ctrl/Cmd+V)로도 교체할 수 있어요. 업로드한 이미지는 페이지 안에 데이터로 포함되어 <b>오프라인에서도 보이는</b> 단일 HTML로 저장할 수 있습니다.</p>
     </div>
+
+    <!-- ======= CONCLUSION ======= -->
+    <section class="conclusion">
+      <h2>그래서 우리는?</h2>
+      <ol>
+        <li>AI 데이터 입력 방식에 관한 지식 공부</li>
+        <li>AI의 시점까지 고려하여 디자인</li>
+      </ol>
+    </section>
+
+    <!-- ======= 3D GALLERY ======= -->
+    <section class="threeD">
+      <h2>3D</h2>
+      <div class="robot-grid">
+        <!-- 참고용 기본 이미지: 자유롭게 교체하세요 -->
+        <img src="https://images.unsplash.com/photo-1605649487212-47bdab064df3?q=80&w=1200&auto=format&fit=crop"
+             alt="로봇 설계도 / 다이어그램">
+        <img src="https://images.unsplash.com/photo-1581091870633-1e7eab09c731?q=80&w=1200&auto=format&fit=crop"
+             alt="로봇 3D 렌더">
+      </div>
+      <div class="robot-views">
+        <img src="https://images.unsplash.com/photo-1614732414444-096e5f1122d5?q=80&w=1200&auto=format&fit=crop" alt="측면">
+        <img src="https://images.unsplash.com/photo-1616789914313-b0da31c3090b?q=80&w=1200&auto=format&fit=crop" alt="후면">
+        <img src="https://images.unsplash.com/photo-1606229365485-93f25cf2a4c7?q=80&w=1200&auto=format&fit=crop" alt="정면">
+      </div>
+    </section>
+
+    <section class="footer" aria-label="푸터">
+      <div class="hr" aria-hidden="true"></div>
+      <p>© 2025 · Machine-Readable Road · Sample single-file layout. Replace images as needed.</p>
+    </section>
   </div>
 
   <script>
@@ -166,7 +264,7 @@
         const html = document.documentElement.outerHTML;
         const blob = new Blob([html], { type: 'text/html;charset=utf-8' });
         const url = URL.createObjectURL(blob);
-        const a = Object.assign(document.createElement('a'), { href: url, download: 'before-after-slider.html' });
+        const a = Object.assign(document.createElement('a'), { href: url, download: 'ai-road_poster_expanded.html' });
         document.body.appendChild(a); a.click(); a.remove(); setTimeout(()=>URL.revokeObjectURL(url), 500);
       });
 
