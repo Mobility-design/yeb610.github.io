@@ -1,0 +1,178 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Before–After 이미지 비교 슬라이더 (단일 파일)</title>
+  <style>
+    :root {
+      --ba-height: 480px;
+      --handle-size: 44px;
+      --handle-ring: 6px;
+      --accent: #5b8cff;
+      --shadow: 0 10px 30px rgba(0,0,0,.25);
+      --radius: 16px;
+      --track-thickness: 3px;
+    }
+
+    * { box-sizing: border-box; }
+    html, body { height: 100%; }
+    body {
+      margin: 0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Noto Sans, Apple SD Gothic Neo, "맑은 고딕", sans-serif;
+      color: #111;
+      background: #0b1220;
+      background: radial-gradient(1200px 800px at 70% -10%, #1a2440 0%, #0b1220 60%, #05070e 100%);
+      display: grid; place-items: center; padding: 24px;
+    }
+
+    .wrap { width: min(100%, 980px); }
+    .header { color: #e8eefc; margin-bottom: 18px; text-align: center; }
+    .header h1 { font-size: clamp(18px, 2.4vw, 26px); margin: 0 0 6px; letter-spacing: .2px; }
+    .header p { opacity: .8; margin: 0; font-size: 14px; }
+
+    .ba { position: relative; width: 100%; height: var(--ba-height); border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow); background: #000; isolation: isolate; user-select: none; }
+    .ba__img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center; pointer-events: none; }
+    .ba__after { clip-path: inset(0 0 0 calc(var(--pos, 50%) - 1px)); }
+    .ba__divider { position: absolute; top: 0; bottom: 0; width: var(--track-thickness); left: var(--pos, 50%); transform: translateX(-50%); background: linear-gradient(to bottom, #fff, #fff0); mix-blend-mode: screen; pointer-events: none; }
+    .ba__handle { position: absolute; left: var(--pos, 50%); top: 50%; transform: translate(-50%, -50%); width: calc(var(--handle-size) + var(--handle-ring) * 2); height: calc(var(--handle-size) + var(--handle-ring) * 2); border-radius: 999px; display: grid; place-items: center; cursor: ew-resize; outline: none; }
+    .ba__handle::before { content: ""; position: absolute; inset: 0; border-radius: inherit; background: radial-gradient(circle at 50% 50%, rgba(91,140,255,.35), rgba(91,140,255,0) 60%); filter: blur(2px); }
+    .ba__handle-core { width: var(--handle-size); height: var(--handle-size); border-radius: 999px; background: #fff; box-shadow: 0 4px 14px rgba(0,0,0,.35), 0 0 0 2px rgba(255,255,255,.4) inset; display: grid; place-items: center; position: relative; }
+    .ba__chevrons { display: inline-grid; grid-auto-flow: column; gap: 8px; align-items: center; filter: drop-shadow(0 1px 0 rgba(0,0,0,.25)); }
+    .ba__chevrons svg { width: 16px; height: 16px; opacity: .9; }
+    .ba__handle:focus-visible .ba__handle-core { box-shadow: 0 0 0 3px var(--accent), 0 4px 14px rgba(0,0,0,.35); }
+
+    .ba__label { position: absolute; z-index: 2; top: 14px; padding: 6px 10px; font-size: 12px; letter-spacing: .2px; color: #0b1220; background: rgba(255,255,255,.92); border-radius: 999px; box-shadow: 0 6px 18px rgba(0,0,0,.25); user-select: none; pointer-events: none; }
+    .ba__label--left { left: 14px; }
+    .ba__label--right { right: 14px; }
+
+    .uploader { margin-top: 16px; display: grid; gap: 8px; color: #e8eefc; }
+    .uploader label { font-size: 12px; opacity: .9; }
+    .uploader input[type="file"] { background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.15); color: #e8eefc; padding: 10px; border-radius: 10px; width: 100%; }
+    .help { color: #cfd9ff; font-size: 12px; opacity: .85; margin-top: 6px; }
+    .actions { display: flex; gap: 8px; margin-top: 8px; }
+    .btn { background: #5b8cff; color: #081225; border: 0; padding: 10px 14px; border-radius: 10px; font-weight: 600; cursor: pointer; }
+    .btn:disabled { opacity: .5; cursor: default; }
+    .drop-hint { position: absolute; inset: 0; display: none; place-items: center; color: #e8eefc; background: rgba(30,46,92,.35); font-weight: 600; letter-spacing: .3px; }
+    .ba.dragover .drop-hint { display: grid; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="header">
+      <h1>Before–After 이미지 비교 슬라이더</h1>
+      <p>가운데 핸들을 드래그하거나, 핸들을 선택한 뒤 키보드 ← → 로 비교하세요. 좌/우로 드래그&드롭 또는 붙여넣기(Ctrl/Cmd+V)로 이미지 교체 가능.</p>
+    </div>
+
+    <section class="ba" id="ba" aria-label="이미지 비교" data-pos="50">
+      <!-- 가시성 확보용 기본 이미지(외부 URL) -->
+      <img class="ba__img ba__before" alt="Before 이미지"
+           src="https://images.unsplash.com/photo-1503023345310-bd7c1de61c7d?q=80&w=1600&auto=format&fit=crop" />
+      <img class="ba__img ba__after" alt="After 이미지"
+           src="https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?q=80&w=1600&auto=format&fit=crop" />
+
+      <div class="ba__divider" aria-hidden="true"></div>
+      <button class="ba__handle" id="baHandle" role="slider" aria-label="이미지 비교 핸들" aria-valuemin="0" aria-valuemax="100" aria-valuenow="50" tabindex="0">
+        <div class="ba__handle-core" aria-hidden="true">
+          <span class="ba__chevrons" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M15 6L9 12L15 18" stroke="#111" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M9 6L15 12L9 18" stroke="#111" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </span>
+        </div>
+      </button>
+      <div class="ba__label ba__label--left">Before</div>
+      <div class="ba__label ba__label--right">After</div>
+      <div class="drop-hint">이미지를 드롭하세요 · 왼쪽=Before / 오른쪽=After</div>
+    </section>
+
+    <div class="uploader" aria-label="이미지 교체">
+      <label>이미지 선택 (로컬 파일 업로드)</label>
+      <input type="file" id="fileBefore" accept="image/*" />
+      <input type="file" id="fileAfter" accept="image/*" />
+      <div class="actions">
+        <button id="exportBtn" class="btn" disabled>내보내기(HTML 저장)</button>
+      </div>
+      <div class="help">드래그&드롭 또는 붙여넣기(Ctrl/Cmd+V)로도 교체할 수 있어요. 업로드한 이미지는 페이지 안에 데이터로 포함되어 <b>오프라인에서도 보이는</b> 단일 HTML로 저장할 수 있습니다.</div>
+    </div>
+  </div>
+
+  <script>
+    (function(){
+      const ba = document.getElementById('ba');
+      const handle = document.getElementById('baHandle');
+      const beforeImg = ba.querySelector('.ba__before');
+      const afterImg  = ba.querySelector('.ba__after');
+      const exportBtn = document.getElementById('exportBtn');
+
+      const setPos = (pct) => {
+        const clamped = Math.max(0, Math.min(100, pct));
+        ba.style.setProperty('--pos', clamped + '%');
+        handle.setAttribute('aria-valuenow', clamped.toFixed(0));
+        ba.dataset.pos = clamped.toFixed(2);
+      };
+      setPos(parseFloat(ba.dataset.pos || '50'));
+
+      const rect = () => ba.getBoundingClientRect();
+      const pointerToPct = (clientX) => { const r = rect(); const x = clientX - r.left; return (x / r.width) * 100; };
+
+      let dragging = false;
+      const onPointerDown = (e) => { dragging = true; document.body.style.cursor = 'ew-resize'; setPos(pointerToPct((e.touches? e.touches[0]: e).clientX)); };
+      const onPointerMove = (e) => { if (!dragging) return; setPos(pointerToPct((e.touches? e.touches[0]: e).clientX)); e.preventDefault(); };
+      const onPointerUp   = () => { dragging = false; document.body.style.cursor = ''; };
+      ba.addEventListener('mousedown', onPointerDown); ba.addEventListener('mousemove', onPointerMove); window.addEventListener('mouseup', onPointerUp);
+      ba.addEventListener('touchstart', onPointerDown, { passive: true }); ba.addEventListener('touchmove', onPointerMove, { passive: false }); window.addEventListener('touchend', onPointerUp, { passive: true });
+
+      handle.addEventListener('keydown', (e) => {
+        const step = (e.shiftKey ? 10 : 2); const cur = parseFloat(ba.dataset.pos || '50');
+        if (e.key === 'ArrowLeft') setPos(cur - step);
+        if (e.key === 'ArrowRight') setPos(cur + step);
+        if (e.key === 'Home') setPos(0);
+        if (e.key === 'End') setPos(100);
+      });
+
+      // ---- 파일 업로드/드롭/붙여넣기 ----
+      const fileBefore = document.getElementById('fileBefore');
+      const fileAfter  = document.getElementById('fileAfter');
+
+      const fileToDataURL = (file) => new Promise((resolve)=>{ const r=new FileReader(); r.onload=()=>resolve(r.result); r.readAsDataURL(file); });
+      const markExportable = () => { exportBtn.disabled = !(beforeImg.src.startsWith('data:') && afterImg.src.startsWith('data:')); };
+
+      fileBefore.addEventListener('change', async (e)=>{ const f=e.target.files?.[0]; if(!f) return; beforeImg.src = await fileToDataURL(f); markExportable(); });
+      fileAfter .addEventListener('change', async (e)=>{ const f=e.target.files?.[0]; if(!f) return; afterImg.src  = await fileToDataURL(f);  markExportable(); });
+
+      // 드래그&드롭 (왼쪽/오른쪽에 따라 before/after 적용)
+      ba.addEventListener('dragover', (e)=>{ e.preventDefault(); ba.classList.add('dragover'); });
+      ba.addEventListener('dragleave', ()=> ba.classList.remove('dragover'));
+      ba.addEventListener('drop', async (e)=>{
+        e.preventDefault(); ba.classList.remove('dragover');
+        const file = e.dataTransfer.files?.[0]; if(!file) return;
+        const x = e.clientX - rect().left; const isRight = x > rect().width/2;
+        const data = await fileToDataURL(file);
+        (isRight ? afterImg : beforeImg).src = data; markExportable();
+      });
+
+      // 붙여넣기 지원 (클립보드 이미지)
+      window.addEventListener('paste', async (e)=>{
+        const item = [...(e.clipboardData?.items||[])].find(i=>i.type.startsWith('image/'));
+        if(!item) return; const file=item.getAsFile(); if(!file) return;
+        const data = await fileToDataURL(file);
+        // 붙여넣기는 현재 분할선 기준: 왼쪽 영역이면 before, 오른쪽이면 after
+        const posPct = parseFloat(ba.dataset.pos || '50');
+        (posPct <= 50 ? beforeImg : afterImg).src = data; markExportable();
+      });
+
+      // 내보내기: 현재 문서를 data URL 이미지를 포함한 단일 HTML로 저장
+      exportBtn.addEventListener('click', ()=>{
+        const html = document.documentElement.outerHTML;
+        const blob = new Blob([html], { type: 'text/html;charset=utf-8' });
+        const url = URL.createObjectURL(blob);
+        const a = Object.assign(document.createElement('a'), { href: url, download: 'before-after-slider.html' });
+        document.body.appendChild(a); a.click(); a.remove(); setTimeout(()=>URL.revokeObjectURL(url), 500);
+      });
+
+      // data URL이면 내보내기 버튼 활성화
+      markExportable();
+    })();
+  </script>
+</body>
+</html>
