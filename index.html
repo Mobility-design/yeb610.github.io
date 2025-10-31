@@ -271,15 +271,20 @@ padding:2px 8px;border-radius:999px;border:1px solid rgba(158,203,255,.25);}
 .scene4.reveal { transition-delay: .7s; }
 
 /* --- 강제 수정: 화살표 화면 하단 고정 --- */
+
+
+/* 하단 중앙 고정 */
 .scroll-down {
-  position: fixed !important;   /* ✅ 다른 속성 전부 무시하고 고정 */
-  bottom: 40px !important;      /* 화면 아래에서 40px 띄우기 */
-  left: 50% !important;
-  transform: translateX(-50%) !important;
+  position: absolute;
+  bottom: 40px;
+  left: 50%;
+  transform: translateX(-50%);
   animation: bounce 2s infinite;
   cursor: pointer;
-  z-index: 9999 !important;
+  transition: opacity 0.5s ease; /* ✅ 서서히 사라지는 전환 효과 */
 }
+
+
 
 
 
@@ -293,6 +298,23 @@ padding:2px 8px;border-radius:999px;border:1px solid rgba(158,203,255,.25);}
 @media (max-width:480px){
   .ba{height:300px}
 }
+
+.scroll-down {
+  position: absolute;
+  bottom: 40px;       /* 화면 아래쪽 여백 (조절 가능: 20~80px) */
+  left: 50%;
+  transform: translateX(-50%);
+  animation: bounce 2s infinite;
+  cursor: pointer;
+  z-index: 10;
+}
+
+@keyframes bounce {
+  0%, 20%, 50%, 80%, 100% { transform: translate(-50%, 0); }
+  40% { transform: translate(-50%, 10px); }
+  60% { transform: translate(-50%, 5px); }
+}
+
 </style>
 </head>
 <body>
@@ -306,6 +328,15 @@ padding:2px 8px;border-radius:999px;border:1px solid rgba(158,203,255,.25);}
       <span class="subline">in 10 Years</span>
     </h1>
     <p class="tagline">10년 후의 딜리버리 모빌리티 디자인</p>
+
+</div>
+
+  <!-- ↓ 아래로 스크롤 유도 화살표 -->
+  <div class="scroll-down" id="scrollDown">
+    <svg width="36" height="36" viewBox="0 0 24 24" fill="none">
+      <path d="M6 9l6 6 6-6" stroke="#9ecbff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+
 
 </section>
 
@@ -508,19 +539,25 @@ document.querySelectorAll('.reveal, .prep-item').forEach(el => io.observe(el));
 </script>
 <script>
 /* 히어로 화면을 벗어나면 화살표 숨기기 */
-document.addEventListener('scroll', () => {
-  const sd = document.getElementById('scrollDown');
-  if(!sd) return;
-  const showUntil = window.innerHeight * 0.7; // 히어로 70% 높이까지 보이게
-  if (window.scrollY < showUntil) {
-    sd.style.opacity = '1';
-    sd.style.pointerEvents = 'auto';
-  } else {
-    sd.style.opacity = '0';
-    sd.style.pointerEvents = 'none';
-  }
-});
+
 </script>
+<script>
+  /* 화살표가 스크롤에 따라 서서히 사라지게 만들기 */
+  document.addEventListener('scroll', () => {
+    const arrow = document.getElementById('scrollDown');
+    if (!arrow) return;
+  
+    // 스크롤 비율 계산 (0~1)
+    const scrollY = window.scrollY;
+    const fadeStart = 0;                // 사라짐 시작 시점 (맨 위)
+    const fadeEnd = window.innerHeight * 0.6; // 화면의 60% 내려가면 완전히 사라짐
+    const opacity = 1 - Math.min(Math.max((scrollY - fadeStart) / (fadeEnd - fadeStart), 0), 1);
+  
+    arrow.style.opacity = opacity.toFixed(2);
+    arrow.style.pointerEvents = opacity <= 0 ? 'none' : 'auto';
+  });
+  </script>
+  
 
 </body>
 </html>
