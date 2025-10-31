@@ -77,11 +77,15 @@ animation:float 18s ease-in-out infinite alternate}
   font-weight: 800;
   line-height: 1.1;
   letter-spacing: -0.02em;
+  text-shadow: 0 0 12px rgba(158, 203, 255, 0.4); /* ✨ 은은한 블루 발광 */
 }
+
 
 .hero .subline {
   color: #9ecbff;
+  text-shadow: 0 0 8px rgba(89, 179, 255, 0.5);
 }
+
 
 .hero .tagline {
   margin-top: 24px;
@@ -313,6 +317,18 @@ padding:2px 8px;border-radius:999px;border:1px solid rgba(158,203,255,.25);}
   0%, 20%, 50%, 80%, 100% { transform: translate(-50%, 0); }
   40% { transform: translate(-50%, 10px); }
   60% { transform: translate(-50%, 5px); }
+}
+
+/* 히어로 텍스트 스크롤 축소/페이드 준비 */
+.hero .wrap {
+  transform-origin: center top;   /* 위쪽을 기준으로 축소되게 */
+  will-change: transform, opacity;
+  transition: transform .28s ease, opacity .28s ease; /* 스크롤 중 미세 보정 */
+}
+
+/* 접근성: 모션 최소화 설정 사용자는 애니메이션 비활성화 */
+@media (prefers-reduced-motion: reduce) {
+  .hero .wrap { transition: none !important; }
 }
 
 </style>
@@ -550,14 +566,39 @@ document.querySelectorAll('.reveal, .prep-item').forEach(el => io.observe(el));
     // 스크롤 비율 계산 (0~1)
     const scrollY = window.scrollY;
     const fadeStart = 0;                // 사라짐 시작 시점 (맨 위)
-    const fadeEnd = window.innerHeight * 0.6; // 화면의 60% 내려가면 완전히 사라짐
+    const fadeEnd = window.innerHeight * 0.8; // 화면의 60% 내려가면 완전히 사라짐
     const opacity = 1 - Math.min(Math.max((scrollY - fadeStart) / (fadeEnd - fadeStart), 0), 1);
   
     arrow.style.opacity = opacity.toFixed(2);
     arrow.style.pointerEvents = opacity <= 0 ? 'none' : 'auto';
   });
+    
   </script>
   
-
+  <script>
+    /* 스크롤에 따라 히어로 텍스트 축소 + 페이드아웃 */
+    document.addEventListener('scroll', () => {
+      const heroWrap = document.querySelector('.hero .wrap');
+      if (!heroWrap) return;
+    
+      // 스크롤 진행도(0~1): 화면 높이의 80% 지점에서 완전 사라지게
+      const start = 0;
+      const end   = window.innerHeight * 0.8;
+      const y     = Math.max(0, Math.min(end, window.scrollY));
+      const t     = (y - start) / (end - start);          // 0 → 1
+      const ease  = t * (2 - t);                           // 약한 ease-out
+    
+      // 스케일(1 → 0.86), 불투명도(1 → 0)
+      const scale   = 1 - ease * 0.14;                     // 축소 폭 조절: 0.10~0.2 사이 추천
+      const opacity = 1 - ease;                            // 0이면 완전 투명
+    
+      heroWrap.style.transform = `scale(${scale}) translateY(${ease * -10}px)`; // 살짝 위로
+      heroWrap.style.opacity   = opacity.toFixed(3);
+    
+      // 너무 투명해지면 포인터 이벤트 끄기(텍스트 드래그 방지)
+      heroWrap.style.pointerEvents = (opacity <= 0.02) ? 'none' : 'auto';
+    });
+    </script>
+    
 </body>
 </html>
