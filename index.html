@@ -334,6 +334,21 @@ padding:2px 8px;border-radius:999px;border:1px solid rgba(158,203,255,.25);}
   }
 }
 
+/* 📱 문장 줄바꿈 개선 (quote 포함 모든 본문 텍스트에 적용 가능) */
+.quote {
+  word-break: keep-all;        /* 단어 중간 줄바꿈 금지 */
+  overflow-wrap: break-word;   /* 너무 긴 단어만 예외적으로 줄바꿈 */
+  line-height: 1.6;            /* 줄 간격 여유 있게 */
+}
+
+@media (max-width: 600px) {
+  .quote {
+    padding: 0 24px;
+    font-size: 15px;
+    line-height: 1.7;
+  }
+}
+
 
 </style>
 </head>
