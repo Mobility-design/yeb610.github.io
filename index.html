@@ -123,7 +123,7 @@ animation:float 18s ease-in-out infinite alternate}
   background:#9ecbff;box-shadow:0 0 0 6px rgba(158,203,255,.15);
 }
 .tl-head{display:flex;align-items:baseline;gap:10px;}
-.tl-year{font-weight:800;letter-spacing:.04em;}
+.tl-year{font-weight:600;letter-spacing:.04em;}
 .pill{font-size:12px;color:#9ecbff;background:rgba(158,203,255,.1);
 padding:2px 8px;border-radius:999px;border:1px solid rgba(158,203,255,.25);}
 
@@ -141,11 +141,11 @@ padding:2px 8px;border-radius:999px;border:1px solid rgba(158,203,255,.25);}
   font-size:13px;
   color:#9ecbff;
   letter-spacing:.05em;
-  font-weight:600;
+  font-weight:400;
 }
 .sig-sub{
   font-size:15px;
-  font-weight:700;
+  font-weight:400;
   color:#e0eeff;
   margin-bottom:10px;
 }
@@ -206,7 +206,7 @@ padding:2px 8px;border-radius:999px;border:1px solid rgba(158,203,255,.25);}
 }
 
 .ba__chevrons svg{width:16px;height:16px}
-.ba__label{position:absolute;top:10px;padding:6px 12px;font-size:12px;font-weight:700;color:#0b1220;background:rgba(255,255,255,.9);border-radius:999px}
+.ba__label{position:absolute;top:10px;padding:6px 12px;font-size:12px;font-weight:500;color:#0b1220;background:rgba(255,255,255,.9);border-radius:999px}
 .ba__label--left{left:10px}.ba__label--right{right:10px}
 .cap{text-align:center;color:#97a9c6;font-size:12px;margin-top:8px}
 
@@ -242,7 +242,7 @@ padding:2px 8px;border-radius:999px;border:1px solid rgba(158,203,255,.25);}
 .scene{display:grid;grid-template-columns:200px 1fr;gap:16px;align-items:center}
 .scene .ph{width:100%;aspect-ratio:1/1;border-radius:14px;overflow:hidden;background:#0b111b;border:1px solid rgba(255,255,255,.06);box-shadow:var(--shadow)}
 .scene .ph img{width:100%;height:100%;object-fit:cover}
-.scene h4{margin:0 0 8px;color:#9ecbff;font-weight:700}
+.scene h4{margin:0 0 8px;color:#9ecbff;font-weight:500}
 .scene p{margin:0;color:#cfd9ea;line-height:1.8}
 
 /* preparation (가로선 제거) */
@@ -376,8 +376,12 @@ body, p, h1, h2, h3, h4, h5, h6, .dim, .card p, .quote, .prep-sub, .prep-item p 
 .section-title {
   font-size: 24px;
   color: #9ecbff;
+  font-weight: 300;   /* ✅ 기존보다 훨씬 얇게 */
   margin-bottom: 48px;
+  letter-spacing: 0.02em;
 }
+
+
 
 /* 로봇 + 태그 위치 */
 .robot-feature {
@@ -491,11 +495,12 @@ body, p, h1, h2, h3, h4, h5, h6, .dim, .card p, .quote, .prep-sub, .prep-item p 
 /* 🔽 로봇 아래 가로 이미지 스타일 */
 .robot-bottom-img {
   width: 100%;
-  max-width: 1100px;           /* 페이지 폭보다 살짝 여유 있게 */
-  margin: 30px auto 0;
+  max-width: 1100px;
+  margin: 10px auto 0 !important;  /* ✅ 강제 적용 */
   text-align: center;
   position: relative;
 }
+
 
 .robot-bottom-img img {
   width: 100%;
@@ -517,6 +522,20 @@ body, p, h1, h2, h3, h4, h5, h6, .dim, .card p, .quote, .prep-sub, .prep-item p 
     margin-top: 30px;
     padding: 0 16px;
   }
+}
+
+
+.robot-feature-section {
+  padding-bottom: 60px; /* 태그 높이 고려해서 60~120px 사이 조절 */
+}
+.bottom-subtitle {
+  font-size: 20px;
+  color: #9ecbff;
+  font-weight: 300;      /* ✅ 얇게 통일 */
+  margin-bottom: 16px;
+  text-align: center;
+  letter-spacing: 0.02em;
+  text-shadow: 0 0 10px rgba(158, 203, 255, 0.25); /* Delivery Robot Design과 동일한 느낌 */
 }
 
 
@@ -658,7 +677,8 @@ body, p, h1, h2, h3, h4, h5, h6, .dim, .card p, .quote, .prep-sub, .prep-item p 
 
   <!-- ✅ 로봇 아래 가로 이미지 -->
   <div class="robot-bottom-img">
-    <img src="https://lh3.googleusercontent.com/d/1eduegYYyz4mmS4Yc-jNHYdJ8tvi40FJ_" alt="로봇 디자인 보조 이미지">
+    <h3 class="bottom-subtitle">3-view</h2>
+    <img src="https://lh3.googleusercontent.com/d/1GTltaLDQ0ETBr47I7tprslVTfWQeioNR" alt="로봇 디자인 보조 이미지">
   </div>
 
 
