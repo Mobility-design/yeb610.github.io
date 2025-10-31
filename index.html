@@ -5,161 +5,160 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Delivery Mobility Design in 10 Years</title>
 <style>
-  :root{
-    --maxw: 960px;
-    --c-bg: #070a0f;
-    --c-fg: #e8f1ff;
-    --c-dim:#96a7c2;
-    --c-accent:#59b3ff;
-    --shadow: 0 10px 30px rgba(0,0,0,.35);
-    /* 타임라인 세로선 x좌표(좌측에서부터) */
-    --line-x: 32px;
-  }
-  *{box-sizing:border-box}
-  html,body{height:100%}
-  body{margin:0;color:var(--c-fg);background:var(--c-bg);
-       font:400 15px/1.7 "Pretendard","Noto Sans KR",sans-serif;overflow-x:hidden;}
-  .wrap{width:min(100%,var(--maxw));margin:0 auto;padding:0 20px;}
-  section{padding:72px 0}
-  h1,h2,h3{margin:0 0 12px}
-  .dim{color:var(--c-dim)}
-  .sect-title{font-size:18px;color:#9ecbff;margin-bottom:12px}
-
-  /* soft animated background */
-  .bg{position:fixed;inset:-40% -20% auto -20%;height:80vh;z-index:-1;
-      background:
-        radial-gradient(60% 60% at 20% 30%, rgba(57,129,255,.18), transparent 60%),
-        radial-gradient(70% 70% at 80% 10%, rgba(0,255,214,.12), transparent 60%),
-        radial-gradient(80% 80% at 60% 90%, rgba(255,140,64,.12), transparent 60%);
-      filter:blur(40px) saturate(120%);
-      animation:float 18s ease-in-out infinite alternate}
-  @keyframes float{0%{transform:translateY(-2%) scale(1)}100%{transform:translateY(6%) scale(1.05)}}
-
-  /* hero */
-  .hero{padding-top:64px;padding-bottom:24px;position:relative}
-  .hero h1{font-size:clamp(28px,5vw,44px);font-weight:800;line-height:1.2}
-  .hero .sub{margin-top:10px;color:#cfe4ff}
-  .banner{margin-top:28px;border-radius:18px;overflow:hidden;box-shadow:var(--shadow);aspect-ratio:16/6;background:#0b0f16}
-  .banner img{width:100%;height:100%;object-fit:cover;opacity:.55}
-
-  /* timeline (간격 확대 + 선/동그라미 중앙 정렬) */
-  :root{
-  /* ...기존 변수들... */
-  --line-x: 32px;      /* 세로 라인이 왼쪽에서 떨어진 위치(px) */
-  --line-gap: 40px;    /* 라인과 텍스트 사이 여백 */
-  --dot: 12px;         /* 동그라미 지름 */
+:root{
+  --maxw: 960px;
+  --c-bg: #070a0f;
+  --c-fg: #e8f1ff;
+  --c-dim:#96a7c2;
+  --shadow: 0 10px 30px rgba(0,0,0,.35);
+  /* 타임라인 위치/간격 */
+  --line-x: 32px;   /* 세로 라인 x */
+  --line-gap: 40px; /* 라인과 텍스트 사이 */
+  --dot: 12px;      /* 동그라미 지름 */
 }
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0;color:var(--c-fg);background:var(--c-bg);
+  font:400 15px/1.7 "Pretendard","Noto Sans KR",sans-serif;
+  overflow-x:hidden;
+}
+.wrap{width:min(100%,var(--maxw));margin:0 auto;padding:0 20px;}
+section{padding:72px 0;}
+h1,h2,h3{margin:0 0 12px}
+.dim{color:var(--c-dim)}
+.sect-title{font-size:18px;color:#9ecbff;margin-bottom:12px}
 
-/* 타임라인 컨테이너 */
+/* soft bg */
+.bg{position:fixed;inset:-40% -20% auto -20%;height:80vh;z-index:-1;
+background:
+radial-gradient(60% 60% at 20% 30%, rgba(57,129,255,.18), transparent 60%),
+radial-gradient(70% 70% at 80% 10%, rgba(0,255,214,.12), transparent 60%),
+radial-gradient(80% 80% at 60% 90%, rgba(255,140,64,.12), transparent 60%);
+filter:blur(40px) saturate(120%);
+animation:float 18s ease-in-out infinite alternate}
+@keyframes float{0%{transform:translateY(-2%) scale(1)}100%{transform:translateY(6%) scale(1.05)}}
+
+/* hero */
+.hero{padding-top:64px;padding-bottom:24px;position:relative}
+.hero h1{font-size:clamp(28px,5vw,44px);font-weight:800;line-height:1.2}
+.hero .sub{margin-top:10px;color:#cfe4ff}
+.banner{margin-top:28px;border-radius:18px;overflow:hidden;box-shadow:var(--shadow);aspect-ratio:16/6;background:#0b0f16}
+.banner img{width:100%;height:100%;object-fit:cover;opacity:.55}
+
+/* timeline (정렬 고정) */
 .timeline{
   position: relative;
-  padding-left: calc(var(--line-x) + var(--line-gap)); /* 라인 + 여백만큼 들여쓰기 */
+  padding-left: calc(var(--line-x) + var(--line-gap));
   margin-top: 44px;
 }
-
-/* 세로 라인: .timeline 기준으로 정확히 고정 */
 .timeline::before{
   content:"";
   position:absolute;
   left: var(--line-x);
-  top: 0; bottom: 0;
-  width: 2px;
-  background: linear-gradient(#2a3650, transparent 12%, #2a3650 88%, transparent);
+  top:0;bottom:0;
+  width:2px;
+  background:linear-gradient(#2a3650,transparent 12%,#2a3650 88%,transparent);
 }
-
-/* 각 항목 간 간격(조금 더 넓힘) */
-.tl-item{
-  position: relative;
-  margin: 46px 0 62px;
-}
-
-/* 동그라미: .tl-item 기준이지만, 수학식으로 라인 중앙에 정확히 위치 */
+.tl-item{position:relative;margin:46px 0 62px;}
 .tl-item::before{
   content:"";
-  position:absolute;
-  top: 6px;
-  /* = -(line-gap) - dot/2  → 패딩에 영향받지 않고 라인 중앙에 고정 */
-  left: calc(-1 * var(--line-gap) - (var(--dot) / 2));
-  width: var(--dot);
-  height: var(--dot);
-  border-radius: 50%;
-  background:#9ecbff;
-  box-shadow: 0 0 0 6px rgba(158,203,255,.15);
+  position:absolute;top:6px;
+  left:calc(-1 * var(--line-gap) - (var(--dot) / 2));
+  width:var(--dot);height:var(--dot);border-radius:50%;
+  background:#9ecbff;box-shadow:0 0 0 6px rgba(158,203,255,.15);
 }
+.tl-head{display:flex;align-items:baseline;gap:10px;}
+.tl-year{font-weight:800;letter-spacing:.04em;}
+.pill{font-size:12px;color:#9ecbff;background:rgba(158,203,255,.1);
+padding:2px 8px;border-radius:999px;border:1px solid rgba(158,203,255,.25);}
 
-/* 머리(연도+뱃지) 스타일은 그대로 */
-.tl-head{ display:flex; align-items:baseline; gap:10px; }
-.tl-year{ font-weight:800; letter-spacing:.04em; }
-.pill{ font-size:12px; color:#9ecbff; background:rgba(158,203,255,.1); padding:2px 8px; border-radius:999px; border:1px solid rgba(158,203,255,.25); }
+/* signals (새 레이아웃) */
+.signals{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:20px;}
+.sig{
+  background:linear-gradient(180deg,#0f1a28,#0d1522);
+  border:1px solid rgba(255,255,255,.06);
+  border-radius:14px;
+  padding:20px 16px;
+  text-align:center;
+}
+.sig h4{
+  margin:0 0 6px;
+  font-size:13px;
+  color:#9ecbff;
+  letter-spacing:.05em;
+  font-weight:600;
+}
+.sig-sub{
+  font-size:15px;
+  font-weight:700;
+  color:#e0eeff;
+  margin-bottom:10px;
+}
+.sig .icon{
+  width:56px;height:56px;margin:0 auto 12px;
+  filter:drop-shadow(0 0 6px rgba(89,179,255,.3));
+}
+.sig .icon img{width:100%;height:100%;object-fit:contain;opacity:.95}
+.sig p{margin:0;font-size:13px;color:#a9bad4;line-height:1.6}
 
-  .signals{ display:grid; grid-template-columns:repeat(3,1fr); gap:16px; margin-top:14px; }
-  .sig{ background:linear-gradient(180deg,#0f1a28,#0d1522); border:1px solid rgba(255,255,255,.06); border-radius:14px; padding:14px; text-align:center; }
-  .sig h4{ margin:0 0 6px; font-size:13px; color:#cfe4ff; }
-  .sig p{ margin:0 0 8px; font-size:12px; color:#a9bad4; }
-  .sig .dim{ margin-bottom:10px; }
-  .sig .icon{ width:48px; height:48px; margin:0 auto; filter:drop-shadow(0 0 4px rgba(89,179,255,.3)); }
-  .sig .icon img{ width:100%; height:100%; object-fit:contain; opacity:.9; }
+/* quote + arrow */
+.quote{margin-top:120px;text-align:center;color:#b9c9e4;}
+.quote .arrow{width:42px;height:42px;border-radius:50%;display:grid;place-items:center;margin:0 auto 18px;border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.04);box-shadow:0 0 18px rgba(89,179,255,.2),inset 0 0 8px rgba(255,255,255,.05);animation:arrowFloat 2s ease-in-out infinite alternate;}
+@keyframes arrowFloat{0%{transform:translateY(0);opacity:.75}100%{transform:translateY(8px);opacity:1}}
 
-  /* quote with down arrow (조금 더 아래) */
-  .quote{ margin-top: 120px; text-align:center; color:#b9c9e4; }
-  .quote .arrow{
-    width:42px;height:42px;border-radius:50%;display:grid;place-items:center;
-    margin:0 auto 18px;border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.04);
-    box-shadow:0 0 18px rgba(89,179,255,.2), inset 0 0 8px rgba(255,255,255,.05);
-    animation:arrowFloat 2s ease-in-out infinite alternate;
-  }
-  @keyframes arrowFloat{0%{transform:translateY(0);opacity:.75}100%{transform:translateY(8px);opacity:1}}
+/* slider */
+.ba{position:relative;width:100%;height:480px;border-radius:16px;overflow:hidden;box-shadow:var(--shadow);background:#000;isolation:isolate}
+.ba__img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.ba__after{clip-path:inset(0 0 0 calc(var(--pos,50%) - 1px))}
+.ba__divider{position:absolute;top:0;bottom:0;width:3px;left:var(--pos,50%);transform:translateX(-50%);background:linear-gradient(to bottom,#fff,#fff0)}
+.ba__handle{position:absolute;left:var(--pos,50%);top:50%;transform:translate(-50%,-50%);width:56px;height:56px;border-radius:999px;display:grid;place-items:center;cursor:ew-resize}
+.ba__handle-core{width:44px;height:44px;border-radius:999px;background:#fff}
+.ba__chevrons{display:inline-grid;grid-auto-flow:column;gap:8px}
+.ba__chevrons svg{width:16px;height:16px}
+.ba__label{position:absolute;top:10px;padding:6px 12px;font-size:12px;font-weight:700;color:#0b1220;background:rgba(255,255,255,.9);border-radius:999px}
+.ba__label--left{left:10px}.ba__label--right{right:10px}
+.cap{text-align:center;color:#97a9c6;font-size:12px;margin-top:8px}
 
-  /* before/after slider */
-  .ba{position:relative;width:100%;height:480px;border-radius:16px;overflow:hidden;box-shadow:var(--shadow);background:#000}
-  .ba__img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
-  .ba__after{clip-path:inset(0 0 0 calc(var(--pos,50%) - 1px))}
-  .ba__divider{position:absolute;top:0;bottom:0;width:3px;left:var(--pos,50%);transform:translateX(-50%);background:linear-gradient(to bottom,#fff,#fff0)}
-  .ba__handle{position:absolute;left:var(--pos,50%);top:50%;transform:translate(-50%,-50%);width:56px;height:56px;border-radius:999px;display:grid;place-items:center;cursor:ew-resize}
-  .ba__handle-core{width:44px;height:44px;border-radius:999px;background:#fff}
-  .ba__chevrons{display:inline-grid;grid-auto-flow:column;gap:8px}
-  .ba__chevrons svg{width:16px;height:16px}
-  .ba__label{position:absolute;top:10px;padding:6px 12px;font-size:12px;font-weight:700;color:#0b1220;background:rgba(255,255,255,.9);border-radius:999px}
-  .ba__label--left{left:10px}.ba__label--right{right:10px}
-  .cap{text-align:center;color:#97a9c6;font-size:12px;margin-top:8px}
+/* robot section */
+.imgbox{width:100%;aspect-ratio:16/9;border-radius:18px;overflow:hidden;background:#0b111b;border:1px solid rgba(255,255,255,.08);margin-bottom:24px}
+.imgbox img{width:100%;height:100%;object-fit:cover}
+.card{background:linear-gradient(180deg,#0f1a28,#0c1421);border:1px solid rgba(255,255,255,.06);border-radius:18px;box-shadow:var(--shadow);padding:18px}
+.bullet h3{margin:0;font-size:16px;color:#9ecbff}
+.bullet p{margin:0;color:#a9bad4;font-size:14px}
 
-  /* robot section */
-  .imgbox{width:100%;aspect-ratio:16/9;border-radius:18px;overflow:hidden;background:#0b111b;border:1px solid rgba(255,255,255,.08);margin-bottom:24px}
-  .imgbox img{width:100%;height:100%;object-fit:cover}
-  .card{background:linear-gradient(180deg,#0f1a28,#0c1421);border:1px solid rgba(255,255,255,.06);border-radius:18px;box-shadow:var(--shadow);padding:18px}
-  .bullet h3{margin:0;font-size:16px;color:#9ecbff}
-  .bullet p{margin:0;color:#a9bad4;font-size:14px}
+/* scenario (1:1) */
+.scenario-title{font-size:20px;color:#9ecbff;margin-bottom:18px}
+.scenario{display:grid;grid-template-columns:1fr 1fr;gap:28px 32px}
+.scene{display:grid;grid-template-columns:200px 1fr;gap:16px;align-items:center}
+.scene .ph{width:100%;aspect-ratio:1/1;border-radius:14px;overflow:hidden;background:#0b111b;border:1px solid rgba(255,255,255,.06);box-shadow:var(--shadow)}
+.scene .ph img{width:100%;height:100%;object-fit:cover}
+.scene h4{margin:0 0 8px;color:#9ecbff;font-weight:700}
+.scene p{margin:0;color:#cfd9ea;line-height:1.8}
 
-  /* scenario (이미지 1:1) */
-  .scenario-title{font-size:20px;color:#9ecbff;margin-bottom:18px}
-  .scenario{display:grid;grid-template-columns:1fr 1fr;gap:28px 32px}
-  .scene{display:grid;grid-template-columns:200px 1fr;gap:16px;align-items:center}
-  .scene .ph{width:100%;aspect-ratio:1/1;border-radius:14px;overflow:hidden;background:#0b111b;border:1px solid rgba(255,255,255,.06);box-shadow:var(--shadow)}
-  .scene .ph img{width:100%;height:100%;object-fit:cover}
-  .scene h4{margin:0 0 6px;color:#9ecbff}
-  .scene p{margin:0;color:#cfd9ea}
+/* preparation (가로선 제거) */
+.prep-title{font-size:20px;color:#9ecbff;margin-top:36px}
+.prep-sub{color:#cfe4ff;margin-bottom:28px}
+.prep-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:24px;margin-top:24px}
+.prep-item{text-align:center}
+.prep-dot{width:80px;height:80px;border-radius:999px;margin:0 auto 14px;border:1px solid rgba(158,203,255,.35);display:grid;place-items:center;background:rgba(255,255,255,.02)}
+.prep-dot span{color:#9ecbff;font-weight:700}
+.prep-item p{color:#a9bad4;margin:0}
 
-  /* preparation (가로선 제거) */
-  .prep-title{font-size:20px;color:#9ecbff;margin-top:36px}
-  .prep-sub{color:#cfe4ff;margin-bottom:28px}
-  .prep-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:24px;margin-top:24px}
-  .prep-item{text-align:center}
-  .prep-dot{width:80px;height:80px;border-radius:999px;margin:0 auto 14px;border:1px solid rgba(158,203,255,.35);display:grid;place-items:center;background:rgba(255,255,255,.02)}
-  .prep-dot span{color:#9ecbff;font-weight:700}
-  .prep-item p{color:#a9bad4;margin:0}
+/* reveal */
+.reveal{opacity:0;transform:translateY(24px);transition:.7s ease}
+.reveal.on{opacity:1;transform:translateY(0)}
 
-  /* reveal */
-  .reveal{opacity:0;transform:translateY(24px);transition:.7s ease}
-  .reveal.on{opacity:1;transform:translateY(0)}
-
-  /* responsive */
-  @media (max-width:760px){
-    .signals{grid-template-columns:1fr}
-    .scenario{grid-template-columns:1fr}
-    .scene{grid-template-columns:1fr}
-    .scene .ph{max-width:360px;justify-self:center}
-    .prep-row{grid-template-columns:1fr;gap:22px}
-  }
+/* responsive */
+@media (max-width:760px){
+  .signals{grid-template-columns:1fr}
+  .scenario{grid-template-columns:1fr}
+  .scene{grid-template-columns:1fr}
+  .ba{height:360px}
+}
+@media (max-width:480px){
+  .ba{height:300px}
+}
 </style>
 </head>
 <body>
@@ -170,7 +169,9 @@
   <div class="wrap reveal">
     <h1>Delivery Mobility Design<br>in 10 Years</h1>
     <div class="sub">10년 후의 딜리버리 모빌리티 디자인</div>
-    <div class="banner"><img src="https://lh3.googleusercontent.com/d/1FCE6aM7Tt6pdkTlC7O9mjKSjYnn1zsdn" alt=""></div>
+    <div class="banner">
+      <img src="https://lh3.googleusercontent.com/d/1FCE6aM7Tt6pdkTlC7O9mjKSjYnn1zsdn" alt="" />
+    </div>
   </div>
 </section>
 
@@ -179,62 +180,66 @@
   <div class="wrap timeline reveal">
     <div class="tl-item">
       <div class="tl-head"><strong class="tl-year">2015</strong><span class="pill">10년 전</span></div>
-      <div class="dim">입력된 작업을 수행하는 <br>일방향적 서비스 위주</div>
+      <div class="dim">입력된 작업을 수행하는<br>일방향적 서비스 위주</div>
     </div>
 
     <div class="tl-item">
       <div class="tl-head"><strong class="tl-year">2025</strong><span class="pill">현재</span></div>
-      <div class="dim">자율주행 기술과 AI가 발전하며 <br>자율이송 로봇 확산 단계</div>
+      <div class="dim">자율주행 기술과 AI가 발전하며<br>자율이송 로봇 확산 단계</div>
+
+      <!-- 시그널 1~3 (새 레이아웃) -->
       <div class="signals">
         <div class="sig">
-          <h4>Signal. 1</h4>
-          <p>글로벌 서비스 로봇 시장, 연 평균 20% 이상의 성장률</p>
-          <div class="dim">로봇 시장의 성장</div>
-          <div class="icon"><img src="https://lh3.googleusercontent.com/d/1p3jIsaiRqpvOLBjemplJxPD6SuhGepln" alt="시장 아이콘 자리"></div>
+          <h4>시그널 1</h4>
+          <div class="sig-sub">로봇 시장의 성장</div>
+          <div class="icon"><img src="https://lh3.googleusercontent.com/d/1p3jIsaiRqpvOLBjemplJxPD6SuhGepln" alt="로봇 시장 아이콘"></div>
+          <p>글로벌 서비스 로봇 시장,<br>연평균 20% 이상의 성장률</p>
         </div>
         <div class="sig">
-          <h4>Signal. 2</h4>
-          <p>한국에서 2023년 ‘이동로봇 안전관리 법안’ 통과</p>
-          <div class="dim">제도적 기반 마련</div>
-          <div class="icon"><img src="https://lh3.googleusercontent.com/d/11PrLZUit9q-pwUGxsghuv2rS0xy_qXEd" alt="법안 아이콘 자리"></div>
+          <h4>시그널 2</h4>
+          <div class="sig-sub">제도적 기반 마련</div>
+          <div class="icon"><img src="https://lh3.googleusercontent.com/d/11PrLZUit9q-pwUGxsghuv2rS0xy_qXEd" alt="법안 아이콘"></div>
+          <p>한국에서 2023년<br>‘이동로봇 안전관리 법안’ 통과</p>
         </div>
         <div class="sig">
-          <h4>Signal. 3</h4>
-          <p>일부 도심에서 자율주행 이송 로봇 상용 테스트 진행 중</p>
-          <div class="dim">시범 운행 확대</div>
-          <div class="icon"><img src="https://lh3.googleusercontent.com/d/1pqL1dsFoCI1Op8a9MlUG6CWipp4roD_k" alt="지도/테스트 아이콘 자리"></div>
+          <h4>시그널 3</h4>
+          <div class="sig-sub">시범 운행 확대</div>
+          <div class="icon"><img src="https://lh3.googleusercontent.com/d/1pqL1dsFoCI1Op8a9MlUG6CWipp4roD_k" alt="지도/테스트 아이콘"></div>
+          <p>일부 도심에서 자율주행 이송 로봇<br>상용 테스트 진행 중</p>
         </div>
       </div>
     </div>
 
     <div class="tl-item">
       <div class="tl-head"><strong class="tl-year">2035</strong><span class="pill">10년 후</span></div>
-      <div class="dim">자율 이송 로봇이 상용화 되며 <br>도시 인프라와의 통합 단계</div>
+      <div class="dim">자율 이송 로봇이 상용화 되며<br>도시 인프라와의 통합 단계</div>
     </div>
 
-    <!-- Arrow + Quote -->
+    <!-- 인용문 + 내려가는 화살표 -->
     <div class="quote">
-      <div class="arrow">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-          <path d="M7 10l5 5 5-5" stroke="#9ecbff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
+      <div class="arrow" id="jump-arrow">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M7 10l5 5 5-5" stroke="#9ecbff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
       </div>
-      “ 10년 후에는 자율 이송 로봇이 상용화 될 것이고,<br>
-        그에 따라 도시는 사람과 로봇이 함께 공존하는 형태가 될 것이다.<br>
-        또한 도심 속 요소들은 사람뿐만이 아니라 로봇의 인식을 고려해 새롭게 설계될 것이다.“
+      “10년 후에는 자율 이송 로봇이 상용화 될 것이고,<br>
+      그에 따라 도시는 사람과 로봇이 함께 공존하는 형태가 될 것이다.<br>
+      또한 도심 속 요소들은 사람뿐만이 아니라 로봇의 인식을 고려해 새롭게 설계될 것이다.”
     </div>
   </div>
 </section>
 
-<!-- BEFORE/AFTER -->
-<section>
+<!-- BEFORE/AFTER SLIDER -->
+<section id="road-slider">
   <div class="wrap reveal">
     <div class="sect-title">미래 도로의 모습</div>
     <div class="ba" id="ba" data-pos="50">
-      <img class="ba__img ba__before" src="https://lh3.googleusercontent.com/d/1F5Mwok1uNUI1oljGnV25jNCm_x4a8rqT" alt="today">
-      <img class="ba__img ba__after"  src="https://lh3.googleusercontent.com/d/16b4-_dzMuIW9l8rWIaGDncKwvK4sMhDH" alt="10 years later">
+      <!-- Today -->
+      <img class="ba__img ba__before" alt="Today 이미지"
+           src="https://lh3.googleusercontent.com/d/1F5Mwok1uNUI1oljGnV25jNCm_x4a8rqT" />
+      <!-- 10 Years Later -->
+      <img class="ba__img ba__after" alt="10년 뒤 이미지"
+           src="https://lh3.googleusercontent.com/d/16b4-_dzMuIW9l8rWIaGDncKwvK4sMhDH" />
       <div class="ba__divider"></div>
-      <button class="ba__handle" id="baHandle" aria-label="이미지 비교 핸들">
+      <button class="ba__handle" id="baHandle" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="50" aria-label="이미지 비교 핸들" tabindex="0">
         <div class="ba__handle-core">
           <span class="ba__chevrons">
             <svg viewBox="0 0 24 24" fill="none"><path d="M15 6L9 12L15 18" stroke="#111" stroke-width="2"/></svg>
@@ -249,13 +254,14 @@
   </div>
 </section>
 
-<!-- ROBOT (image + bullets) -->
+<!-- ROBOT -->
 <section>
   <div class="wrap reveal">
     <div class="sect-title">배달 로봇 <span class="dim">modeling design</span></div>
     <div class="dim" style="margin-top:-6px;">도심 내 음식 및 소형 물류 배송을 위한 자율주행 배달로봇 디자인</div>
     <div class="imgbox">
-      <img src="https://lh3.googleusercontent.com/d/1fr28hZcoJ0DhGvdWF4spp-C0Ywcy_RxC" alt="배달 로봇 대표 이미지">
+      <!-- 필요 시 여기에도 구글드라이브 링크로 이미지 넣으세요 -->
+      <img src="https://lh3.googleusercontent.com/d/1SxSL0oFREjc44TE3bpoDEX5tQjzmDjto" alt="배달 로봇 대표 이미지">
     </div>
     <div class="card">
       <div class="bullet"><h3>주행 안전성</h3><p>전면의 라이다 센서와 카메라를 통해 보행자와 장애물을 인식하고, 경로를 스스로 조정하며 안전하게 이동한다.</p></div>
@@ -265,7 +271,7 @@
   </div>
 </section>
 
-<!-- SCENARIO -->
+<!-- SCENARIO (1~4) -->
 <section>
   <div class="wrap reveal">
     <div class="scenario-title">시나리오</div>
@@ -280,10 +286,10 @@
       </div>
       <div class="scene">
         <div class="ph"><img src="https://lh3.googleusercontent.com/d/1786w2Z90O7Wh9CXxm9pUA4umj1SuAC13" alt="3. 도착"></div>
-        <div><h4>3. 도착</h4><p>목적지에 도착 후, 전면의 QR 코드를 인식해 샌드위치를 전달받는다.</p></div>
+        <div><h4>3. 도착</h4><p>목적지에 도착 후, 전면의 QR 코드를 인식해 주문자를 확인하고 전달한다.</p></div>
       </div>
       <div class="scene">
-        <div class="ph"><img src="https://lh3.googleusercontent.com/d/1pxGpnXMLper39W9i09l8nqa8m2Sydlfb" alt="4. 복귀"></div>
+        <div class="ph"><img src="https://lh3.googleusercontent.com/d/1eHk8skDkIpB8uE4kul7NQJyX_x6VGlps" alt="4. 복귀"></div>
         <div><h4>4. 복귀</h4><p>로봇은 뚜껑을 닫고, 다시 충전 스테이션으로 향한다.</p></div>
       </div>
     </div>
@@ -314,23 +320,44 @@
 
 <section style="padding:56px 0 92px"><div class="wrap dim">© 2035 Delivery Mobility Design</div></section>
 
+<!-- 스크립트 -->
 <script>
-/* before/after slider */
+/* 공통 이미지 최적화: lazy + referrerpolicy */
+document.querySelectorAll('img').forEach(img=>{
+  const isHero = img.closest('.banner');
+  if(!isHero){ img.loading='lazy'; img.decoding='async'; } else { img.fetchPriority='high'; }
+  img.referrerPolicy='no-referrer';
+});
+
+/* 슬라이더 동작 */
 (function(){
   const ba=document.getElementById('ba'); if(!ba) return;
-  const setPos=p=>ba.style.setProperty('--pos',Math.max(0,Math.min(100,p))+'%');
-  setPos(parseFloat(ba.dataset.pos||'50'));
+  const handle=document.getElementById('baHandle');
+  const setPos=p=>{ const c=Math.max(0,Math.min(100,p)); ba.style.setProperty('--pos',c+'%'); handle?.setAttribute('aria-valuenow',c.toFixed(0)); };
   const rect=()=>ba.getBoundingClientRect();
   const pct=x=>{const r=rect();return ((x-r.left)/r.width)*100;}
+  setPos(parseFloat(ba.dataset.pos||'50'));
   let drag=false;
-  const down=e=>{drag=true;setPos(pct((e.touches?e.touches[0]:e).clientX))}
-  const move=e=>{if(!drag)return;setPos(pct((e.touches?e.touches[0]:e).clientX));e.preventDefault()}
-  const up=()=>{drag=false}
+  const down=e=>{drag=true;setPos(pct((e.touches?e.touches[0]:e).clientX));document.body.style.cursor='ew-resize';}
+  const move=e=>{if(!drag)return;setPos(pct((e.touches?e.touches[0]:e).clientX));e.preventDefault();}
+  const up=()=>{drag=false;document.body.style.cursor='';}
   ba.addEventListener('mousedown',down);ba.addEventListener('mousemove',move);window.addEventListener('mouseup',up);
   ba.addEventListener('touchstart',down,{passive:true});ba.addEventListener('touchmove',move,{passive:false});window.addEventListener('touchend',up,{passive:true});
+  handle?.addEventListener('keydown',e=>{
+    const step=(e.shiftKey?10:2); const cur=parseFloat(getComputedStyle(ba).getPropertyValue('--pos'))||50;
+    if(e.key==='ArrowLeft') setPos(cur-step);
+    if(e.key==='ArrowRight') setPos(cur+step);
+    if(e.key==='Home') setPos(0);
+    if(e.key==='End') setPos(100);
+  });
 })();
-/* reveal on scroll */
-const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('on');io.unobserve(e.target)}}),{threshold:.2});
+
+/* 인용문 화살표 클릭하면 슬라이더로 스크롤 */
+const j=document.getElementById('jump-arrow');
+if(j){ j.style.cursor='pointer'; j.addEventListener('click',()=>{ document.getElementById('road-slider')?.scrollIntoView({behavior:'smooth',block:'start'}); }); }
+
+/* 스크롤 리빌 */
+const io=new IntersectionObserver(es=>es.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('on'); io.unobserve(e.target);} }),{threshold:.2});
 document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
 </script>
 </body>
