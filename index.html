@@ -112,18 +112,65 @@ padding:2px 8px;border-radius:999px;border:1px solid rgba(158,203,255,.25);}
 .ba__img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
 .ba__after{clip-path:inset(0 0 0 calc(var(--pos,50%) - 1px))}
 .ba__divider{position:absolute;top:0;bottom:0;width:3px;left:var(--pos,50%);transform:translateX(-50%);background:linear-gradient(to bottom,#fff,#fff0)}
-.ba__handle{position:absolute;left:var(--pos,50%);top:50%;transform:translate(-50%,-50%);width:56px;height:56px;border-radius:999px;display:grid;place-items:center;cursor:ew-resize}
-.ba__handle-core{width:44px;height:44px;border-radius:999px;background:#fff}
-.ba__chevrons{display:inline-grid;grid-auto-flow:column;gap:8px}
+/* before/after handle 중앙 정렬 수정 */
+.ba__handle {
+  position: absolute;
+  top: 50%;
+  left: var(--pos, 50%);
+  transform: translate(-50%, -50%);
+  width: 64px; /* 기존보다 약간 크게 조정 */
+  height: 64px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  cursor: ew-resize;
+  z-index: 5; /* 이미지 위로 */
+}
+
+.ba__handle-core {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0 8px rgba(0,0,0,.25);
+}
+
+.ba__chevrons {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transform: translateY(1px); /* 세로 정렬 미세 조정 */
+}
+
+.ba__chevrons svg {
+  width: 18px;
+  height: 18px;
+}
+
 .ba__chevrons svg{width:16px;height:16px}
 .ba__label{position:absolute;top:10px;padding:6px 12px;font-size:12px;font-weight:700;color:#0b1220;background:rgba(255,255,255,.9);border-radius:999px}
 .ba__label--left{left:10px}.ba__label--right{right:10px}
 .cap{text-align:center;color:#97a9c6;font-size:12px;margin-top:8px}
 
 /* robot section */
-.imgbox{width:100%;aspect-ratio:16/9;border-radius:18px;overflow:hidden;background:#0b111b;border:1px solid rgba(255,255,255,.08);margin-bottom:24px}
-.imgbox img{width:100%;height:100%;object-fit:cover}
-.card{background:linear-gradient(180deg,#0f1a28,#0c1421);border:1px solid rgba(255,255,255,.06);border-radius:18px;box-shadow:var(--shadow);padding:18px}
+.imgbox{
+  width:100%;
+  margin-bottom:24px;
+}
+.imgbox img{
+  width:100%;
+  height:auto;
+  display:block;
+  object-fit:contain;
+  border-radius:0;
+  box-shadow:none;
+  background:none;
+}
+
 .bullet h3{margin:0;font-size:16px;color:#9ecbff}
 .bullet p{margin:0;color:#a9bad4;font-size:14px}
 
@@ -218,8 +265,14 @@ padding:2px 8px;border-radius:999px;border:1px solid rgba(158,203,255,.25);}
     <!-- 인용문 + 내려가는 화살표 -->
     <div class="quote">
       <div class="arrow" id="jump-arrow">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M7 10l5 5 5-5" stroke="#9ecbff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <svg width="34" height="34" viewBox="0 0 34 34" fill="none">
+          <!-- 화살꼬리 -->
+          <line x1="17" y1="8" x2="17" y2="22" stroke="#9ecbff" stroke-width="2.5" stroke-linecap="round"/>
+          <!-- 화살촉 -->
+          <path d="M11 18l6 6 6-6" stroke="#9ecbff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
       </div>
+      
       “10년 후에는 자율 이송 로봇이 상용화 될 것이고,<br>
       그에 따라 도시는 사람과 로봇이 함께 공존하는 형태가 될 것이다.<br>
       또한 도심 속 요소들은 사람뿐만이 아니라 로봇의 인식을 고려해 새롭게 설계될 것이다.”
@@ -277,7 +330,7 @@ padding:2px 8px;border-radius:999px;border:1px solid rgba(158,203,255,.25);}
     <div class="scenario-title">시나리오</div>
     <div class="scenario">
       <div class="scene">
-        <div class="ph"><img src="https://lh3.googleusercontent.com/d/1Gw6fNFcAk1j3mkxzxiwVV9RicXtomyjE" alt="1. 주문"></div>
+        <div class="ph"><img src="https://lh3.googleusercontent.com/d/11EZiwQDb2DGiKpj8RGPOsgrzBn48ad7w" alt="1. 주문"></div>
         <div><h4>1. 주문</h4><p>직장인 여성이 점심 시간 10분 전, 근처 샌드위치 가게에 주문을 넣는다.</p></div>
       </div>
       <div class="scene">
@@ -285,7 +338,7 @@ padding:2px 8px;border-radius:999px;border:1px solid rgba(158,203,255,.25);}
         <div><h4>2. 이동</h4><p>음식 완성 후, 가게 앞에서 로봇이 자동으로 출발하여 목적지까지 자율 주행한다.</p></div>
       </div>
       <div class="scene">
-        <div class="ph"><img src="https://lh3.googleusercontent.com/d/1786w2Z90O7Wh9CXxm9pUA4umj1SuAC13" alt="3. 도착"></div>
+        <div class="ph"><img src="https://lh3.googleusercontent.com/d/13njfR-47ISbzjPhDlij96wvNH40phCJw" alt="3. 도착"></div>
         <div><h4>3. 도착</h4><p>목적지에 도착 후, 전면의 QR 코드를 인식해 주문자를 확인하고 전달한다.</p></div>
       </div>
       <div class="scene">
