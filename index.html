@@ -40,6 +40,25 @@ filter:blur(40px) saturate(120%);
 animation:float 18s ease-in-out infinite alternate}
 @keyframes float{0%{transform:translateY(-2%) scale(1)}100%{transform:translateY(6%) scale(1.05)}}
 
+/* "우리의 준비" 동그라미 등장 모션 */
+.prep-item {
+  opacity: 0;
+  transform: translateY(40px);
+  transition: all 0.8s ease;
+}
+
+/* 화면에 보일 때 활성화될 상태 */
+.prep-item.on {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* 순차적으로 딜레이 주기 */
+.prep-item:nth-child(1).on { transition-delay: 0.1s; }
+.prep-item:nth-child(2).on { transition-delay: 0.3s; }
+.prep-item:nth-child(3).on { transition-delay: 0.5s; }
+
+
 /* hero */
 .hero{padding-top:64px;padding-bottom:24px;position:relative}
 .hero h1{font-size:clamp(28px,5vw,44px);font-weight:800;line-height:1.2}
@@ -437,5 +456,21 @@ if(j){ j.style.cursor='pointer'; j.addEventListener('click',()=>{ document.getEl
 const io=new IntersectionObserver(es=>es.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('on'); io.unobserve(e.target);} }),{threshold:.2});
 document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
 </script>
+<script>
+  /* "우리의 준비" 동그라미 스크롤 시 위로 떠오름 */
+  document.addEventListener("DOMContentLoaded", function(){
+    const prepItems = document.querySelectorAll('.prep-item');
+    const io = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.classList.add('on');
+          io.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.3 });
+    prepItems.forEach(el => io.observe(el));
+  });
+  </script>
+  
 </body>
 </html>
