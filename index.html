@@ -538,6 +538,72 @@ body, p, h1, h2, h3, h4, h5, h6, .dim, .card p, .quote, .prep-sub, .prep-item p 
   text-shadow: 0 0 10px rgba(158, 203, 255, 0.25); /* Delivery Robot Design과 동일한 느낌 */
 }
 
+/* 🔽 페이지 하단 부드러운 페이드아웃 */
+section:last-of-type {
+  position: relative;
+}
+section:last-of-type::after {
+  content: "";
+  position: absolute;
+  left: 0; right: 0; bottom: 0;
+  height: 160px;
+  background: linear-gradient(180deg, rgba(7,10,15,0) 0%, #070a0f 100%);
+}
+
+/* 인용문 + 화살표: 스크롤 전 초기 상태 */
+.quote {
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity .9s ease, transform .9s ease;
+  will-change: opacity, transform;
+}
+
+.quote .arrow {
+  opacity: 0;
+  transform: translateY(-12px) scale(.98);
+  transition: opacity .8s ease .08s, transform .8s ease .08s;
+  will-change: opacity, transform;
+}
+
+/* 뷰포트에 들어오면 활성화 */
+.quote.on {
+  opacity: 1;
+  transform: translateY(0);
+}
+.quote.on .arrow {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+/* 화살표에 은은한 ‘숨쉬기’(on일 때만) */
+.quote.on .arrow {
+  animation: arrowFloat 2.4s ease-in-out infinite alternate;
+}
+@keyframes arrowFloat {
+  from { transform: translateY(0) scale(1); }
+  to   { transform: translateY(6px) scale(1.01); }
+}
+
+/* 모션 최소화 설정 사용자 배려 */
+@media (prefers-reduced-motion: reduce) {
+  .quote, .quote .arrow { transition: none !important; animation: none !important; }
+}
+
+/* 📱 모바일에서 세로 스크롤을 우선 허용 */
+.before-after, .compare, .ba-slider, .ba-track, .ba-images,
+input[type="range"].compare-range {
+  touch-action: pan-y;   /* 세로 스크롤은 통과 */
+}
+
+/* 드래그 핸들은 가로 제스처만 */
+.ba-handle, .compare .handle, .slider-handle {
+  touch-action: pan-x;   /* 가로 드래그만 받음 (세로는 스크롤로 넘김) */
+}
+
+/* 혹시 이미지가 터치 이벤트를 먹고 있으면 패스스루 */
+.before-after img, .compare img {
+  pointer-events: none;
+}
 
 
 </style>
@@ -596,14 +662,14 @@ body, p, h1, h2, h3, h4, h5, h6, .dim, .card p, .quote, .prep-sub, .prep-item p 
           <h4>signal 3</h4>
           <div class="sig-sub">시범 운행 확대</div>
           <div class="icon"><img src="https://lh3.googleusercontent.com/d/1pqL1dsFoCI1Op8a9MlUG6CWipp4roD_k" alt="지도/테스트 아이콘"></div>
-          <p>일부 도심에서 자율주행 이송 로봇<br>상용 테스트 진행 중</p>
+          <p>일부 도심에서 자율주행 배달 로봇<br>상용 테스트 진행 중</p>
         </div>
       </div>
     </div>
 
     <div class="tl-item reveal">
       <div class="tl-head"><strong class="tl-year">2035</strong><span class="pill">10년 후</span></div>
-      <div class="dim">자율 이송 로봇이 상용화 되며<br>도시 인프라와의 통합 단계</div>
+      <div class="dim">자율 배달 로봇이 상용화 되며<br>도시 인프라와의 통합 단계</div>
     </div>
 
   </div>
@@ -615,7 +681,7 @@ body, p, h1, h2, h3, h4, h5, h6, .dim, .card p, .quote, .prep-sub, .prep-item p 
       <path d="M11 18l6 6 6-6" stroke="#9ecbff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
     </svg>
   </div>
-  “10년 후에는 자율 이송 로봇이 상용화 될 것이고,<br>
+  “10년 후에는 자율 배달 로봇이 상용화 될 것이고,<br>
   그에 따라 도시는 사람과 로봇이 함께 공존하는 형태로 변한다.<br>
   도심 속 요소들은 사람뿐만이 아니라 로봇의 인식을 고려해 새롭게 설계될 것이다.”
 </div>
@@ -827,7 +893,28 @@ document.querySelectorAll('.reveal, .prep-item').forEach(el => io.observe(el));
       // 너무 투명해지면 포인터 이벤트 끄기(텍스트 드래그 방지)
       heroWrap.style.pointerEvents = (opacity <= 0.02) ? 'none' : 'auto';
     });
+    
     </script>
+    <script>
+      /* 인용문(quote) 뷰포트 진입 시 모션 트리거 */
+      (() => {
+        const q = document.querySelector('.quote');
+        if (!q) return;
+      
+        const io = new IntersectionObserver((entries) => {
+          entries.forEach(e => {
+            if (e.isIntersecting) {
+              q.classList.add('on');        // 등장
+            } else {
+              q.classList.remove('on');     // 다시 위로 올리면 원상복귀 (원하면 이 줄 지워서 1회성으로)
+            }
+          });
+        }, { threshold: 0.25 });
+      
+        io.observe(q);
+      })();
+      </script>
+      
     
 </body>
 </html>
