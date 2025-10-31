@@ -59,12 +59,46 @@ animation:float 18s ease-in-out infinite alternate}
 .prep-item:nth-child(3).on { transition-delay: 0.5s; }
 
 
-/* hero */
-.hero{padding-top:64px;padding-bottom:24px;position:relative}
-.hero h1{font-size:clamp(28px,5vw,44px);font-weight:800;line-height:1.2}
-.hero .sub{margin-top:10px;color:#cfe4ff}
-.banner{margin-top:150px;border-radius:18px;overflow:hidden;box-shadow:var(--shadow);aspect-ratio:16/6;background:#0b0f16}
-.banner img{width:100%;height:100%;object-fit:cover;opacity:.55}
+/* HERO (텍스트 중심) */
+/* HERO (텍스트 중심 버전) */
+.hero {
+  position: relative;          /* ✅ 화살표 기준점이 되도록 relative 추가 */
+  min-height: 100vh;           /* 화면 꽉 채움 */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  text-align: center;
+  overflow: hidden;            /* 화살표가 삐져나오지 않게 */
+}
+
+.hero h1 {
+  font-size: clamp(42px, 6vw, 72px);
+  font-weight: 800;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+}
+
+.hero .subline {
+  color: #9ecbff;
+}
+
+.hero .tagline {
+  margin-top: 24px;
+  color: #cfe4ff;
+  font-size: 18px;
+  letter-spacing: 0.03em;
+}
+
+
+
+
+@keyframes bounce {
+  0%, 20%, 50%, 80%, 100% { transform: translate(-50%, 0); }
+  40% { transform: translate(-50%, 10px); }
+  60% { transform: translate(-50%, 5px); }
+}
+
 
 /* timeline (정렬 고정) */
 .timeline{
@@ -236,6 +270,18 @@ padding:2px 8px;border-radius:999px;border:1px solid rgba(158,203,255,.25);}
 .scene3.reveal { transition-delay: .5s; }
 .scene4.reveal { transition-delay: .7s; }
 
+/* --- 강제 수정: 화살표 화면 하단 고정 --- */
+.scroll-down {
+  position: fixed !important;   /* ✅ 다른 속성 전부 무시하고 고정 */
+  bottom: 40px !important;      /* 화면 아래에서 40px 띄우기 */
+  left: 50% !important;
+  transform: translateX(-50%) !important;
+  animation: bounce 2s infinite;
+  cursor: pointer;
+  z-index: 9999 !important;
+}
+
+
 
 /* responsive */
 @media (max-width:760px){
@@ -252,16 +298,17 @@ padding:2px 8px;border-radius:999px;border:1px solid rgba(158,203,255,.25);}
 <body>
 <div class="bg" aria-hidden="true"></div>
 
-<!-- HERO -->
+<!-- HERO (텍스트 중심 + 스크롤 화살표) -->
 <section class="hero">
   <div class="wrap reveal">
-    <h1>Delivery Mobility Design<br>in 10 Years</h1>
-    <div class="sub">10년 후의 딜리버리 모빌리티 디자인</div>
-    <div class="banner">
-      <img src="https://lh3.googleusercontent.com/d/1FCE6aM7Tt6pdkTlC7O9mjKSjYnn1zsdn" alt="" />
-    </div>
-  </div>
+    <h1>
+      Delivery Mobility Design<br>
+      <span class="subline">in 10 Years</span>
+    </h1>
+    <p class="tagline">10년 후의 딜리버리 모빌리티 디자인</p>
+
 </section>
+
 
 <!-- TIMELINE -->
 <section>
@@ -460,20 +507,20 @@ document.querySelectorAll('.reveal, .prep-item').forEach(el => io.observe(el));
 
 </script>
 <script>
-  /* "우리의 준비" 동그라미 스크롤 시 위로 떠오름 */
-  document.addEventListener("DOMContentLoaded", function(){
-    const prepItems = document.querySelectorAll('.prep-item');
-    const io = new IntersectionObserver(entries => {
-      entries.forEach(e => {
-        if (e.isIntersecting) {
-          e.target.classList.add('on');
-          io.unobserve(e.target);
-        }
-      });
-    }, { threshold: 0.3 });
-    prepItems.forEach(el => io.observe(el));
-  });
-  </script>
-  
+/* 히어로 화면을 벗어나면 화살표 숨기기 */
+document.addEventListener('scroll', () => {
+  const sd = document.getElementById('scrollDown');
+  if(!sd) return;
+  const showUntil = window.innerHeight * 0.7; // 히어로 70% 높이까지 보이게
+  if (window.scrollY < showUntil) {
+    sd.style.opacity = '1';
+    sd.style.pointerEvents = 'auto';
+  } else {
+    sd.style.opacity = '0';
+    sd.style.pointerEvents = 'none';
+  }
+});
+</script>
+
 </body>
 </html>
