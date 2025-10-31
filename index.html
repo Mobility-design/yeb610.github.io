@@ -349,6 +349,25 @@ padding:2px 8px;border-radius:999px;border:1px solid rgba(158,203,255,.25);}
   }
 }
 
+/* 🪶 전체 텍스트 줄바꿈 및 가독성 개선 */
+body, p, h1, h2, h3, h4, h5, h6, .dim, .card p, .quote, .prep-sub, .prep-item p {
+  word-break: keep-all;        /* 한글 어절 단위로 줄바꿈 */
+  overflow-wrap: break-word;   /* 너무 긴 단어만 예외적으로 줄바꿈 */
+  line-height: 1.6;            /* 전체 줄 간격 통일 */
+  hyphens: none;               /* 영어 하이픈 자동 삽입 방지 */
+}
+
+@media (max-width: 600px) {
+  body {
+    font-size: 15px;
+    line-height: 1.7;
+  }
+  .quote {
+    padding: 0 24px;
+  }
+}
+
+
 
 </style>
 </head>
