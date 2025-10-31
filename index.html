@@ -123,7 +123,7 @@ padding:2px 8px;border-radius:999px;border:1px solid rgba(158,203,255,.25);}
 .sig p{margin:0;font-size:13px;color:#a9bad4;line-height:1.6}
 
 /* quote + arrow */
-.quote{margin-top:180px;text-align:center;color:#b9c9e4;}
+.quote{margin-top:1px;text-align:center;color:#b9c9e4;}
 .quote .arrow{width:42px;height:42px;border-radius:50%;display:grid;place-items:center;margin:0 auto 18px;border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.04);box-shadow:0 0 18px rgba(89,179,255,.2),inset 0 0 8px rgba(255,255,255,.05);animation:arrowFloat 2s ease-in-out infinite alternate;}
 @keyframes arrowFloat{0%{transform:translateY(0);opacity:.75}100%{transform:translateY(8px);opacity:1}}
 
@@ -303,24 +303,19 @@ padding:2px 8px;border-radius:999px;border:1px solid rgba(158,203,255,.25);}
       <div class="dim">자율 이송 로봇이 상용화 되며<br>도시 인프라와의 통합 단계</div>
     </div>
 
-    
-
-    <!-- 인용문 + 내려가는 화살표 -->
-    <div class="quote">
-      <div class="arrow" id="jump-arrow">
-        <svg width="34" height="34" viewBox="0 0 34 34" fill="none">
-          <!-- 화살꼬리 -->
-          <line x1="17" y1="8" x2="17" y2="22" stroke="#9ecbff" stroke-width="2.5" stroke-linecap="round"/>
-          <!-- 화살촉 -->
-          <path d="M11 18l6 6 6-6" stroke="#9ecbff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
-      </div>
-      
-      “10년 후에는 자율 이송 로봇이 상용화 될 것이고,<br>
-      그에 따라 도시는 사람과 로봇이 함께 공존하는 형태가 될 것이다.<br>
-      또한 도심 속 요소들은 사람뿐만이 아니라 로봇의 인식을 고려해 새롭게 설계될 것이다.”
-    </div>
   </div>
+  <!-- ✨ 이제 quote를 타임라인 바깥, 페이지 중앙으로 이동 -->
+<div class="quote">
+  <div class="arrow">
+    <svg width="34" height="34" viewBox="0 0 34 34" fill="none">
+      <line x1="17" y1="8" x2="17" y2="22" stroke="#9ecbff" stroke-width="2.5" stroke-linecap="round"/>
+      <path d="M11 18l6 6 6-6" stroke="#9ecbff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+  </div>
+  “10년 후에는 자율 이송 로봇이 상용화 될 것이고,<br>
+  그에 따라 도시는 사람과 로봇이 함께 공존하는 형태가 될 것이다.<br>
+  또한 도심 속 요소들은 사람뿐만이 아니라 로봇의 인식을 고려해 새롭게 설계될 것이다.”
+</div>
 </section>
 
 <!-- BEFORE/AFTER SLIDER -->
@@ -453,8 +448,16 @@ const j=document.getElementById('jump-arrow');
 if(j){ j.style.cursor='pointer'; j.addEventListener('click',()=>{ document.getElementById('road-slider')?.scrollIntoView({behavior:'smooth',block:'start'}); }); }
 
 /* 스크롤 리빌 */
-const io=new IntersectionObserver(es=>es.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('on'); io.unobserve(e.target);} }),{threshold:.2});
-document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+/* 스크롤 리빌 - 반복 작동 버전 */
+const io = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) e.target.classList.add('on');
+    else e.target.classList.remove('on');
+  });
+}, { threshold: 0.2 });
+
+document.querySelectorAll('.reveal, .prep-item').forEach(el => io.observe(el));
+
 </script>
 <script>
   /* "우리의 준비" 동그라미 스크롤 시 위로 떠오름 */
