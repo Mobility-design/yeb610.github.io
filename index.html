@@ -367,6 +367,158 @@ body, p, h1, h2, h3, h4, h5, h6, .dim, .card p, .quote, .prep-sub, .prep-item p 
   }
 }
 
+/* 🧭 배달 로봇 특징 섹션 */
+.robot-feature-section {
+  text-align: center;
+  margin: 100px auto;
+  max-width: var(--maxw);
+}
+.section-title {
+  font-size: 24px;
+  color: #9ecbff;
+  margin-bottom: 48px;
+}
+
+/* 로봇 + 태그 위치 */
+.robot-feature {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 32px;
+}
+.robot-img {
+  width: clamp(420px, 55vw, 720px);  /* ✅ 크기 크게 조정 */
+  filter: drop-shadow(0 0 36px rgba(89,179,255,0.3));
+  transform: translateY(60px);       /* 살짝 더 아래로 */
+  animation: floatRobot 6s ease-in-out infinite alternate;
+}
+
+
+
+/* 떠있는 태그 박스 */
+.tag {
+  position: absolute;
+  max-width: 200px;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 14px;
+  padding: 14px 18px;
+  color: #cfe4ff;
+  text-align: left;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 0 16px rgba(89,179,255,0.1);
+  animation: floatTag 5s ease-in-out infinite alternate;
+  transition: transform .3s ease;
+}
+.tag:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 20px rgba(89,179,255,0.3);
+}
+.tag h3 {
+  color: #9ecbff;
+  margin-bottom: 6px;
+  font-size: 16px;
+}
+.tag p {
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+/* 태그 배치 위치 */
+/* 자연스럽게 흩어진 태그 위치 */
+.tag-top {
+  bottom: -50px;
+  left: 50%;
+  transform: translate(-70%, 150px); /* 약간 왼쪽 아래 */
+}
+
+.tag-left {
+  left: 8%;  /* 기존 6% → 중앙으로 6% 이동 */
+  top: 68%;
+  transform: translateY(-18px) rotate(-2.5deg);
+}
+
+.tag-right {
+  right: 8%; /* 기존 6% → 중앙으로 6% 이동 */
+  top: 46%;
+  transform: translateY(-10px) rotate(2deg);
+}
+
+/* 🎯 태그 크기 균일화 */
+.tag {
+  width: clamp(220px, 22vw, 260px); /* 모든 태그 동일 폭 */
+  min-height: 120px;               /* 내용이 달라도 높이 통일 */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;         /* 텍스트를 세로 가운데 정렬 */
+  text-align: center;
+}
+
+
+
+
+
+
+/* 부드럽게 떠 있는 애니메이션 */
+@keyframes floatRobot {
+  0% { transform: translateY(0); }
+  100% { transform: translateY(-10px); }
+}
+@keyframes floatTag {
+  0% { transform: translateY(0); opacity: 1; }
+  100% { transform: translateY(-12px); opacity: 0.95; }
+}
+
+/* 📱 모바일 대응: 태그를 아래로 정렬 */
+@media (max-width: 700px) {
+  .robot-feature {
+    flex-direction: column;
+    gap: 24px;
+  }
+  .tag {
+    position: static;
+    max-width: 90%;
+    text-align: center;
+    animation: none;
+  }
+  .tag-top, .tag-left, .tag-right {
+    transform: none;
+  }
+}
+
+/* 🔽 로봇 아래 가로 이미지 스타일 */
+.robot-bottom-img {
+  width: 100%;
+  max-width: 1100px;           /* 페이지 폭보다 살짝 여유 있게 */
+  margin: 30px auto 0;
+  text-align: center;
+  position: relative;
+}
+
+.robot-bottom-img img {
+  width: 100%;
+  border-radius: 14px;
+  object-fit: cover;
+  filter: drop-shadow(0 0 20px rgba(89,179,255,0.25));
+  transition: transform 0.6s ease, filter 0.6s ease;
+}
+
+/* 살짝 hover하면 부드럽게 확대 */
+.robot-bottom-img img:hover {
+  transform: scale(1.02);
+  filter: drop-shadow(0 0 28px rgba(89,179,255,0.35));
+}
+
+/* 📱 모바일에서는 여백 조금 줄이기 */
+@media (max-width: 700px) {
+  .robot-bottom-img {
+    margin-top: 30px;
+    padding: 0 16px;
+  }
+}
+
 
 
 </style>
@@ -478,21 +630,40 @@ body, p, h1, h2, h3, h4, h5, h6, .dim, .card p, .quote, .prep-sub, .prep-item p 
 </section>
 
 <!-- ROBOT -->
-<section>
-  <div class="wrap reveal">
-    <div class="sect-title">배달 로봇 <span class="dim">modeling design</span></div>
-    <div class="dim" style="margin-top:-6px;">도심 내 음식 및 소형 물류 배송을 위한 자율주행 배달로봇 디자인</div>
-    <div class="imgbox">
-      <!-- 필요 시 여기에도 구글드라이브 링크로 이미지 넣으세요 -->
-      <img src="https://lh3.googleusercontent.com/d/1fr28hZcoJ0DhGvdWF4spp-C0Ywcy_RxC" alt="배달 로봇 대표 이미지">
+<!-- 🧭 배달 로봇 기능 시각화 섹션 -->
+<section class="robot-feature-section">
+  <h2 class="section-title">Delivery Robot Design</h2>
+
+  <div class="robot-feature">
+    <img src="https://lh3.googleusercontent.com/d/1vaAUeEvZ3Jl0b0i7v1dDSg9gWQU9aPsO" alt="배달 로봇 이미지" class="robot-img">
+
+    <!-- 떠있는 태그 3개 -->
+    <div class="tag tag-top">
+      <h3>주행 안전성</h3>
+      <p>전면 라이다 센서와 카메라로 보행자·장애물을 인식하고 경로를 조정해 안전하게 이동</p>
     </div>
-    <div class="card">
-      <div class="bullet"><h3>주행 안전성</h3><p>전면의 라이다 센서와 카메라를 통해 보행자와 장애물을 인식하고, 경로를 스스로 조정하며 안전하게 이동한다.</p></div>
-      <div class="bullet"><h3>모듈형 배터리</h3><p>모듈형 배터리 시스템으로 짧은 거리의 퀵배송에 효율적으로 대응하고, 유지·충전이 간편하다.</p></div>
-      <div class="bullet"><h3>친근한 디자인</h3><p>둥근 비율과 단정한 형태로 설계되어 도시 환경 속에서도 위화감 없이 어우러지며, 귀엽고 친근한 인상으로 사람들에게 심리적 거리감을 줄인다.</p></div>
+
+    <div class="tag tag-left">
+      <h3>모듈형 배터리</h3>
+      <p>모듈 교체형 시스템으로 짧은 거리의 퀵배송에 효율적 대응, 유지·충전이 간편</p>
     </div>
+
+    <div class="tag tag-right">
+      <h3>친근한 디자인</h3>
+      <p>둥근 비율과 단정한 형태로 도시 환경과 조화, 심리적 거리감을 줄이는 따뜻한 외형</p>
+    </div>
+  
   </div>
 </section>
+
+  <!-- ✅ 로봇 아래 가로 이미지 -->
+  <div class="robot-bottom-img">
+    <img src="https://lh3.googleusercontent.com/d/1eduegYYyz4mmS4Yc-jNHYdJ8tvi40FJ_" alt="로봇 디자인 보조 이미지">
+  </div>
+
+
+ 
+
 
 <!-- SCENARIO (1~4) -->
 <section>
